@@ -104,7 +104,8 @@ const DynamicControl = forwardRef(function DynamicControl({ config, value, onCha
   return <div>Unknown type: {state.type}</div>;
 });
 
-// --- Library export for CCL v2 matching package.json name ---
+// --- Dual export: individual component for rendering + library for CCL detection ---
+export { DynamicControl };
 export const AlchemerImitiation = {
   DynamicControl
 };
