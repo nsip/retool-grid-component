@@ -222,8 +222,68 @@ This issue represents a complete failure of the custom component development wor
 ## Contact Information
 [Your contact details]
 
+## Control Test with Official Retool Example
+
+### Test Setup
+To determine if this is a platform-wide issue, we tested with an official Retool example component (RoundedBox) from the official repository: https://github.com/tryretool/custom-component-examples/
+
+### RoundedBox Component Code
+```typescript
+import { FC } from 'react'
+import { Retool } from '@tryretool/custom-component-support'
+
+export const RoundedBox: FC = () => {
+  const [headerText] = Retool.useStateString({ name: 'headerText' })
+  const [bodyText] = Retool.useStateString({ name: 'bodyText' })
+  
+  return (
+    <div style={{
+      border: '2px solid #007bff',
+      borderRadius: '12px',
+      padding: '20px',
+      margin: '10px',
+      backgroundColor: '#f8f9fa',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h2 style={{ color: '#007bff', marginTop: 0 }}>{headerText}</h2>
+      <p style={{ color: '#333', lineHeight: '1.5' }}>{bodyText}</p>
+    </div>
+  )
+}
+
+export const AlchemerImitiation = { RoundedBox };
+```
+
+### Control Test Results
+**Build Output:**
+```
+dist/components.js                             587b
+dist/retool-custom-component-manifest.json     534b
+dist/retool-custom-component-manifest.json.js   70b
+```
+
+**Deploy Output:**
+```
+Successfully created a new version (13) of the library.
+```
+
+### Key Findings
+1. **Manifest Size**: Official component generates 534b manifest vs our component's 225b
+2. **Detection Success**: Official component is detected much more comprehensively by CCL
+3. **Export Structure**: Uses identical export pattern to our working version
+4. **Component Complexity**: Much simpler than our DynamicControl component
+
+### Comparison Analysis
+| Component | Manifest Size | CCL Detection | Export Structure |
+|-----------|---------------|---------------|------------------|
+| Our DynamicControl | 225b | Intermittent | `export const AlchemerImitiation = { DynamicControl }` |
+| Official RoundedBox | 534b | Consistent | `export const AlchemerImitiation = { RoundedBox }` |
+
+This suggests the issue may be related to component complexity or specific React patterns used in our implementation.
+
 ## Additional Evidence
 Terminal logs show clear pattern of instability:
 - Same code produces different manifest sizes at different times
 - Successful deployments with zero functional impact
 - Component detection appears to be environmentally dependent rather than code-dependent
+- Official Retool examples show significantly better CCL detection (534b vs 225b manifest)
