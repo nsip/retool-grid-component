@@ -4,22 +4,27 @@ import { useState, forwardRef, useImperativeHandle } from "react";
 
 
 // --- DynamicControl Component ---
-const DynamicControl = forwardRef(function DynamicControl({ config, onChange }, ref) {
+const DynamicControl = forwardRef(function DynamicControl({ config, onChange }: any, ref: any) {
   const [state, setState] = useState(config || { rows: [], columns: [], type: null, responses: {} });
 
-  const updateResponses = (newResponses) => {
+  const updateResponses = (newResponses: any) => {
     const updated = { ...state, responses: newResponses };
     setState(updated);
     if (onChange) onChange(updated);
   };
 
-  // --- Clear method ---
+  // --- Clear method and setValue method ---
   useImperativeHandle(ref, () => ({
     clearValue: () => {
       const cleared = { rows: [], columns: [], type: null, responses: {} };
       setState(cleared);
       if (onChange) onChange(cleared);
-    }
+    },
+    setValue: (newValue: any) => {
+      setState(newValue);
+      if (onChange) onChange(newValue);
+    },
+    getValue: () => state
   }));
 
   if (!state || !state.type) return <div>No configuration</div>;
@@ -30,20 +35,20 @@ const DynamicControl = forwardRef(function DynamicControl({ config, onChange }, 
         <thead>
           <tr>
             <th></th>
-            {state.columns.map((col, idx) => (
+            {state.columns.map((col: any, idx: number) => (
               <th key={idx} className="border p-2">{col}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {state.rows.map((row, rIdx) => (
+          {state.rows.map((row: any, rIdx: number) => (
             <tr key={rIdx}>
               <td className="border p-2">{row}</td>
-              {state.columns.map((col, cIdx) => {
+              {state.columns.map((col: any, cIdx: number) => {
                 const checked = !!state.responses?.[row]?.[col];
                 const inputProps = {
                   checked,
-                  onChange: (e?: any) => {
+                  onChange: (e: any) => {
                     if (state.type === "checkbox") {
                       const newResponses = {
                         ...state.responses,
@@ -77,7 +82,7 @@ const DynamicControl = forwardRef(function DynamicControl({ config, onChange }, 
             <label className="mb-1 font-medium">{label}</label>
             <input
               type="text"
-              value={value}
+              value={String(value || '')}
               className="border rounded p-1"
               onChange={(e) => {
                 const newResponses = { ...state.responses, [label]: e.target.value };
@@ -96,3 +101,7 @@ const DynamicControl = forwardRef(function DynamicControl({ config, onChange }, 
 // --- Named export for CCL v2 ---
 export { DynamicControl };
 
+// --- Library export matching package.json name ---
+export const retoolDynamicControl = {
+  DynamicControl
+};
