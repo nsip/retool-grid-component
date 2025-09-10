@@ -1,111 +1,108 @@
-import * as React from "react";
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { FC } from 'react'
+import { Retool } from '@tryretool/custom-component-support'
 
-// --- DynamicControl Component with setValue method ---
-const DynamicControl = forwardRef(function DynamicControl({ config, value, onChange }: any, ref: any) {
-  const [state, setState] = useState((config || value) || { rows: [], columns: [], type: null, responses: {} });
+interface GridConfig {
+  type: 'checkbox' | 'radio' | 'misc'
+  rows?: string[]
+  columns?: string[]
+}
 
-  // Sync with parent when props change
-  useEffect(() => {
-    const newValue = config || value;
-    if (newValue) setState(newValue);
-  }, [config, value]);
+interface GridResponses {
+  [key: string]: any
+}
 
-  const updateResponses = (newResponses: any) => {
-    const updated = { ...state, responses: newResponses };
-    setState(updated);
-    if (onChange) onChange(updated);
-  };
+export const DynamicControl: FC = () => {
+  const [config] = Retool.useStateObject({ name: 'config' })
+  const [responses, setResponses] = Retool.useStateObject({ name: 'responses' })
 
-  // --- Expose setValue, getValue, and clearValue methods via ref ---
-  useImperativeHandle(ref, () => ({
-    setValue: (newValue: any) => {
-      setState(newValue);
-      if (onChange) onChange(newValue);
-    },
-    getValue: () => state,
-    clearValue: () => {
-      const cleared = { rows: [], columns: [], type: null, responses: {} };
-      setState(cleared);
-      if (onChange) onChange(cleared);
-    }
-  }), [state, onChange]);
+  // Type guard and validation
+  const gridConfig = config as unknown as GridConfig
+  const gridResponses = (responses || {}) as GridResponses
 
-  if (!state || !state.type) return <div>No configuration</div>;
+  // Handle case where config is not provided
+  if (!gridConfig || !gridConfig.type) {
+    return <div>No configuration provided</div>
+  }
+
+  const updateResponses = (newResponses: GridResponses) => {
+    setResponses(newResponses)
+  }
 
   // Checkbox / Radio grid
-  if (state.type === "checkbox" || state.type === "radio") {
+  if (gridConfig.type === 'checkbox' || gridConfig.type === 'radio') {
+    const rows = gridConfig.rows || []
+    const columns = gridConfig.columns || []
+    
     return (
-      <table className="border-collapse border">
+      <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc' }}>
         <thead>
           <tr>
             <th></th>
-            {state.columns.map((col: any, idx: number) => (
-              <th key={idx} className="border p-2">{col}</th>
+            {columns.map((col: string, idx: number) => (
+              <th key={idx} style={{ border: '1px solid #ccc', padding: '8px' }}>
+                {col}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {state.rows.map((row: any, rIdx: number) => (
+          {rows.map((row: string, rIdx: number) => (
             <tr key={rIdx}>
-              <td className="border p-2">{row}</td>
-              {state.columns.map((col: any, cIdx: number) => {
-                const checked = !!state.responses?.[row]?.[col];
-                const inputProps = {
-                  checked,
-                  onChange: (e: any) => {
-                    if (state.type === "checkbox") {
-                      const newResponses = {
-                        ...state.responses,
-                        [row]: { ...(state.responses?.[row] || {}), [col]: e.target.checked },
-                      };
-                      updateResponses(newResponses);
-                    } else if (state.type === "radio") {
-                      const newResponses = { ...state.responses, [row]: { [col]: true } };
-                      updateResponses(newResponses);
-                    }
-                  }
-                };
+              <td style={{ border: '1px solid #ccc', padding: '8px' }}>{row}</td>
+              {columns.map((col: string, cIdx: number) => {
+                const checked = !!(gridResponses[row] && gridResponses[row][col])
                 return (
-                  <td key={cIdx} className="border p-2 text-center">
-                    <input type={state.type} {...inputProps} name={row} />
+                  <td key={cIdx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center' }}>
+                    <input
+                      type={gridConfig.type}
+                      name={row}
+                      checked={checked}
+                      onChange={(e) => {
+                        if (gridConfig.type === 'checkbox') {
+                          const newResponses = {
+                            ...gridResponses,
+                            [row]: { ...(gridResponses[row] || {}), [col]: e.target.checked },
+                          }
+                          updateResponses(newResponses)
+                        } else if (gridConfig.type === 'radio') {
+                          const newResponses = { ...gridResponses, [row]: { [col]: true } }
+                          updateResponses(newResponses)
+                        }
+                      }}
+                    />
                   </td>
-                );
+                )
               })}
             </tr>
           ))}
         </tbody>
       </table>
-    );
+    )
   }
 
   // Textbox grid
-  if (state.type === "misc") {
+  if (gridConfig.type === 'misc') {
     return (
-      <div className="space-y-2">
-        {Object.entries(state.responses || {}).map(([label, value], idx) => (
-          <div key={idx} className="flex flex-col">
-            <label className="mb-1 font-medium">{label}</label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {Object.entries(gridResponses).map(([label, value], idx) => (
+          <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
+            <label style={{ marginBottom: '4px', fontWeight: 'bold' }}>{label}</label>
             <input
               type="text"
               value={String(value || '')}
-              className="border rounded p-1"
+              style={{ border: '1px solid #ccc', borderRadius: '4px', padding: '4px' }}
               onChange={(e) => {
-                const newResponses = { ...state.responses, [label]: e.target.value };
-                updateResponses(newResponses);
+                const newResponses = { ...gridResponses, [label]: e.target.value }
+                updateResponses(newResponses)
               }}
             />
           </div>
         ))}
       </div>
-    );
+    )
   }
 
-  return <div>Unknown type: {state.type}</div>;
-});
+  return <div>Unknown type: {gridConfig.type}</div>
+}
 
-// --- Export structure that worked before ---
-export { DynamicControl };
-export const AlchemerImitiation = {
-  DynamicControl
-};
+export const AlchemerImitiation = { DynamicControl }
