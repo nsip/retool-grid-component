@@ -1,0 +1,9 @@
+{
+  "customComponentSupportVersion": "2",
+  "components": {
+    "DynamicControl": {
+      "displayName": "DynamicControl",
+      "entry": "src/index.tsx"
+    }
+  }
+}
