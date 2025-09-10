@@ -121,3 +121,5 @@ export const DynamicControl: FC = () => {
 
   return <div>Unknown type: {gridConfig.type}</div>
 }
+
+export const AlchemerImitiation = { DynamicControl }
