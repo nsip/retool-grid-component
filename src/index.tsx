@@ -1,4 +1,4 @@
-import { FC, forwardRef, useImperativeHandle } from 'react'
+import { FC } from 'react'
 import { Retool } from '@tryretool/custom-component-support'
 
 interface GridConfig {
@@ -11,21 +11,14 @@ interface GridResponses {
   [key: string]: any
 }
 
-export const DynamicControl = forwardRef<any, any>((props, ref) => {
-  const [config, setConfig] = Retool.useStateObject({ name: 'config' })
-  const [responses, setResponses] = Retool.useStateObject({ name: 'responses' })
-
-  // Expose setValue methods for iframe access
-  useImperativeHandle(ref, () => ({
-    setValue: (newValue: any) => {
-      setConfig(newValue)
-    },
-    getValue: () => config,
-    setResponses: (newResponses: any) => {
-      setResponses(newResponses)
-    },
-    getResponses: () => responses
-  }))
+export const DynamicControl: FC = () => {
+  const [config] = Retool.useStateObject({ 
+    name: 'config'
+  })
+  const [responses, setResponses] = Retool.useStateObject({ 
+    name: 'responses',
+    initialValue: {}
+  })
 
   // Type guard and validation
   const gridConfig = config as unknown as GridConfig
@@ -43,6 +36,7 @@ export const DynamicControl = forwardRef<any, any>((props, ref) => {
         </ul>
         <p>Example: <code>assessorGrid.setValue({`{type: 'checkbox', rows: ['Row1'], columns: ['Col1']}`})</code></p>
         <p>Current config: <code>{JSON.stringify(config)}</code></p>
+        <p>Current responses: <code>{JSON.stringify(responses)}</code></p>
       </div>
     )
   }
@@ -126,8 +120,4 @@ export const DynamicControl = forwardRef<any, any>((props, ref) => {
   }
 
   return <div>Unknown type: {gridConfig.type}</div>
-})
-
-DynamicControl.displayName = 'DynamicControl'
-
-export const AlchemerImitiation = { DynamicControl }
+}
