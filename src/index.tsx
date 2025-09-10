@@ -12,16 +12,26 @@ interface GridResponses {
 }
 
 export const DynamicControl: FC = () => {
-  const [config] = Retool.useStateObject({ name: 'config' })
+  const [config, setConfig] = Retool.useStateObject({ name: 'config' })
   const [responses, setResponses] = Retool.useStateObject({ name: 'responses' })
 
   // Type guard and validation
   const gridConfig = config as unknown as GridConfig
   const gridResponses = (responses || {}) as GridResponses
 
-  // Handle case where config is not provided
+  // Handle case where config is not provided - show default grid
   if (!gridConfig || !gridConfig.type) {
-    return <div>No configuration provided</div>
+    return (
+      <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+        <h3>Dynamic Control Component</h3>
+        <p>Ready to receive configuration via props:</p>
+        <ul>
+          <li><strong>config</strong>: Grid configuration object</li>
+          <li><strong>responses</strong>: Current response values</li>
+        </ul>
+        <p>Example config: <code>{`{type: 'checkbox', rows: ['Row1'], columns: ['Col1']}`}</code></p>
+      </div>
+    )
   }
 
   const updateResponses = (newResponses: GridResponses) => {
