@@ -115,9 +115,9 @@ export const StableGrid: FC = () => {
         <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc', width: '100%' }}>
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>
-              <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left', fontFamily: '"Inter var", Inter, sans-serif' }}></th>
+              <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}></th>
               {columns.map((col: string, idx: number) => (
-                <th key={idx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center', fontWeight: 'bold', fontFamily: '"Inter var", Inter, sans-serif' }}>
+                <th key={idx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center', fontWeight: 'bold', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
                   {safeStringify(col)}
                 </th>
               ))}
@@ -126,7 +126,7 @@ export const StableGrid: FC = () => {
           <tbody>
             {rows.map((row: string, rIdx: number) => (
               <tr key={rIdx}>
-                <td style={{ border: '1px solid #ccc', padding: '8px', fontWeight: 'bold', backgroundColor: '#f9f9f9', fontFamily: '"Inter var", Inter, sans-serif' }}>
+                <td style={{ border: '1px solid #ccc', padding: '8px', fontWeight: 'bold', backgroundColor: '#f9f9f9', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
                   {safeStringify(row)}
                 </td>
                 {columns.map((col: string, cIdx: number) => {
@@ -171,7 +171,7 @@ export const StableGrid: FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {rows.map((rowLabel: string, idx: number) => (
             <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ marginBottom: '6px', fontWeight: 'bold', color: '#333', fontFamily: '"Inter var", Inter, sans-serif' }}>
+              <label style={{ marginBottom: '6px', fontWeight: 'bold', color: '#333', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
                 {safeStringify(rowLabel)}
               </label>
               <input
@@ -181,7 +181,7 @@ export const StableGrid: FC = () => {
                   border: '1px solid #ccc', 
                   borderRadius: '4px', 
                   padding: '8px',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontFamily: '"Inter var", Inter, sans-serif'
                 }}
                 onChange={(e) => {
@@ -198,7 +198,7 @@ export const StableGrid: FC = () => {
   }
 
   return (
-    <div style={{ padding: '20px', color: '#666', border: '1px solid #ccc', borderRadius: '8px', fontFamily: '"Inter var", Inter, sans-serif' }}>
+    <div style={{ padding: '20px', color: '#666', border: '1px solid #ccc', borderRadius: '8px', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
       <strong>Unknown grid type:</strong> {safeStringify(config.type)}
     </div>
   )
