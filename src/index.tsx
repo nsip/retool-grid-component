@@ -111,16 +111,13 @@ export const StableGrid: FC = () => {
     const columns = config.columns || []
     
     return (
-      <div style={{ padding: '16px', border: '2px solid #28a745', borderRadius: '8px', backgroundColor: '#d4edda' }}>
-        <h3 style={{ color: '#155724' }}>✅ {config.type.toUpperCase()} Grid</h3>
-        <p><strong>Rows:</strong> {safeStringify(rows.length)} | <strong>Columns:</strong> {safeStringify(columns.length)}</p>
-        
-        <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc', width: '100%', marginTop: '10px' }}>
+      <div style={{ fontFamily: '"Inter var", Inter, sans-serif' }}>
+        <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc', width: '100%' }}>
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>
-              <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}></th>
+              <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left', fontFamily: '"Inter var", Inter, sans-serif' }}></th>
               {columns.map((col: string, idx: number) => (
-                <th key={idx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>
+                <th key={idx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center', fontWeight: 'bold', fontFamily: '"Inter var", Inter, sans-serif' }}>
                   {safeStringify(col)}
                 </th>
               ))}
@@ -129,7 +126,7 @@ export const StableGrid: FC = () => {
           <tbody>
             {rows.map((row: string, rIdx: number) => (
               <tr key={rIdx}>
-                <td style={{ border: '1px solid #ccc', padding: '8px', fontWeight: 'bold', backgroundColor: '#f9f9f9' }}>
+                <td style={{ border: '1px solid #ccc', padding: '8px', fontWeight: 'bold', backgroundColor: '#f9f9f9', fontFamily: '"Inter var", Inter, sans-serif' }}>
                   {safeStringify(row)}
                 </td>
                 {columns.map((col: string, cIdx: number) => {
@@ -161,10 +158,6 @@ export const StableGrid: FC = () => {
             ))}
           </tbody>
         </table>
-        
-        <div style={{ marginTop: '12px', padding: '8px', backgroundColor: '#c3e6cb', borderRadius: '4px', fontSize: '12px' }}>
-          <strong>Current Responses:</strong> <code>{safeStringify(responses)}</code>
-        </div>
       </div>
     )
   }
@@ -174,14 +167,11 @@ export const StableGrid: FC = () => {
     const rows = config.rows || []
     
     return (
-      <div style={{ padding: '16px', border: '2px solid #ffc107', borderRadius: '8px', backgroundColor: '#fff3cd' }}>
-        <h3 style={{ color: '#856404' }}>📝 TEXTBOX Grid</h3>
-        <p><strong>Fields:</strong> {safeStringify(rows.length)}</p>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+      <div style={{ fontFamily: '"Inter var", Inter, sans-serif' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {rows.map((rowLabel: string, idx: number) => (
             <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ marginBottom: '6px', fontWeight: 'bold', color: '#333' }}>
+              <label style={{ marginBottom: '6px', fontWeight: 'bold', color: '#333', fontFamily: '"Inter var", Inter, sans-serif' }}>
                 {safeStringify(rowLabel)}
               </label>
               <input
@@ -191,7 +181,8 @@ export const StableGrid: FC = () => {
                   border: '1px solid #ccc', 
                   borderRadius: '4px', 
                   padding: '8px',
-                  fontSize: '14px'
+                  fontSize: '14px',
+                  fontFamily: '"Inter var", Inter, sans-serif'
                 }}
                 onChange={(e) => {
                   const newResponses = { ...responses, [rowLabel]: e.target.value }
@@ -202,16 +193,12 @@ export const StableGrid: FC = () => {
             </div>
           ))}
         </div>
-        
-        <div style={{ marginTop: '12px', padding: '8px', backgroundColor: '#ffeaa7', borderRadius: '4px', fontSize: '12px' }}>
-          <strong>Current Responses:</strong> <code>{safeStringify(responses)}</code>
-        </div>
       </div>
     )
   }
 
   return (
-    <div style={{ padding: '20px', color: '#666', border: '1px solid #ccc', borderRadius: '8px' }}>
+    <div style={{ padding: '20px', color: '#666', border: '1px solid #ccc', borderRadius: '8px', fontFamily: '"Inter var", Inter, sans-serif' }}>
       <strong>Unknown grid type:</strong> {safeStringify(config.type)}
     </div>
   )
