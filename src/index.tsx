@@ -111,8 +111,21 @@ export const StableGrid: FC = () => {
     const columns = config.columns || []
     
     return (
-      <div style={{ fontFamily: '"Inter var", Inter, sans-serif' }}>
-        <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc', width: '100%' }}>
+      <>
+        <style>{`
+          .stable-grid-container * {
+            font-size: 12px !important;
+            font-family: "Inter var", Inter, sans-serif !important;
+          }
+          .stable-grid-container table {
+            font-size: 12px !important;
+          }
+          .stable-grid-container th, .stable-grid-container td {
+            font-size: 12px !important;
+          }
+        `}</style>
+        <div className="stable-grid-container" style={{ fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
+          <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc', width: '100%', fontSize: '12px' }}>
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>
               <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}></th>
@@ -157,8 +170,9 @@ export const StableGrid: FC = () => {
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+          </table>
+        </div>
+      </>
     )
   }
 
@@ -167,8 +181,21 @@ export const StableGrid: FC = () => {
     const rows = config.rows || []
     
     return (
-      <div style={{ fontFamily: '"Inter var", Inter, sans-serif' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <>
+        <style>{`
+          .stable-grid-textbox * {
+            font-size: 12px !important;
+            font-family: "Inter var", Inter, sans-serif !important;
+          }
+          .stable-grid-textbox input {
+            font-size: 12px !important;
+          }
+          .stable-grid-textbox label {
+            font-size: 12px !important;
+          }
+        `}</style>
+        <div className="stable-grid-textbox" style={{ fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {rows.map((rowLabel: string, idx: number) => (
             <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
               <label style={{ marginBottom: '6px', fontWeight: 'bold', color: '#333', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
@@ -192,15 +219,24 @@ export const StableGrid: FC = () => {
               />
             </div>
           ))}
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
-    <div style={{ padding: '20px', color: '#666', border: '1px solid #ccc', borderRadius: '8px', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
-      <strong>Unknown grid type:</strong> {safeStringify(config.type)}
-    </div>
+    <>
+      <style>{`
+        .stable-grid-error * {
+          font-size: 12px !important;
+          font-family: "Inter var", Inter, sans-serif !important;
+        }
+      `}</style>
+      <div className="stable-grid-error" style={{ padding: '20px', color: '#666', border: '1px solid #ccc', borderRadius: '8px', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
+        <strong>Unknown grid type:</strong> {safeStringify(config.type)}
+      </div>
+    </>
   )
 }
 
