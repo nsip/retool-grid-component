@@ -60,6 +60,20 @@ export const StableGrid: FC = () => {
     config = null
   }
 
+  // RESET DETECTION: Check for special reset configuration
+  React.useEffect(() => {
+    if (config && config.type === 'RESET_COMPONENT') {
+      console.log('Reset command detected - clearing component state')
+      
+      // Clear both internal and external state
+      setConfigString('')
+      setCurrentResponses('{}')
+      
+      // Fire event to notify external components
+      onResponsesChanged()
+    }
+  }, [config, setConfigString, setCurrentResponses, onResponsesChanged])
+
   // Extract responses from unified config (default to empty object)
   const responses = config?.responses || {}
 
