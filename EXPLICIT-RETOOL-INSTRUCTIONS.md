@@ -1,8 +1,8 @@
 # StableGrid Component - Setup Instructions
 
-## ✅ CURRENT STATUS: Version 74 - External State Access Breakthrough
+## ✅ CURRENT STATUS: Version 78 - Complete State Management Solution
 
-The StableGrid component provides **stable, reliable programmatic control** with full external state access for backend integration.
+The StableGrid component provides **stable, reliable programmatic control** with full external state access and reset functionality that works even when the component is not visible.
 
 ## 🚀 Quick Setup Guide
 
@@ -12,7 +12,7 @@ The StableGrid component provides **stable, reliable programmatic control** with
 npm run build
 npx retool-ccl deploy
 ```
-**Expected Result**: "Successfully created a new version (74) of the library"
+**Expected Result**: "Successfully created a new version (78) of the library"
 
 ### Step 2: Add Component to Retool App
 1. Open your Retool app
@@ -51,7 +51,7 @@ gridConfig.setValue(JSON.stringify({
 }));
 ```
 
-### Step 5: Test External State Access (NEW in V74)
+### Step 5: Test External State Access
 1. After setting up the grid and interacting with it (clicking checkboxes), test external state access:
 ```javascript
 // Read user responses in JavaScript queries
@@ -72,6 +72,17 @@ fetch('/api/save', {
    - In StableGrid Inspector panel, find "onResponsesChanged"
    - Add event handler with action: `console.log("Responses changed:", stableGrid1.currentResponses)`
 
+### Step 6: Test Component Reset (NEW in V78)
+Test the ability to reset component state even when not visible:
+```javascript
+// Reset component state (works even when component not visible)
+assessorGrid.config = '{"type":"RESET_COMPONENT"}';
+
+// Verify reset worked
+console.log('Config after reset:', assessorGrid.config); // Should be ""
+console.log('Responses after reset:', assessorGrid.currentResponses); // Should be "{}"
+```
+
 ## 🎯 What Should Work
 
 ### ✅ Success Indicators
@@ -82,6 +93,7 @@ fetch('/api/save', {
 - Checkboxes are clickable and functional
 - **External state access works** - `stableGrid1.currentResponses` returns user data
 - **Event callbacks fire** - `onResponsesChanged` triggers on user interactions
+- **Component reset works** - `assessorGrid.config = '{"type":"RESET_COMPONENT"}'` clears state even when not visible
 - No "dead computer icon" appears
 
 ### ❌ If Something Fails
@@ -195,10 +207,11 @@ updateGrid(
 
 ### Debug Steps
 1. **Check Browser Console**: Press F12, look for errors
-2. **Verify Component Version**: Should be version 74
+2. **Verify Component Version**: Should be version 78
 3. **Test Inspector First**: Always test manual input before programmatic
 4. **Check State Variable**: Ensure it's created and bound correctly
 5. **Test External State Access**: Verify `stableGrid1.currentResponses` returns data after user interactions
+6. **Test Reset Functionality**: Verify `assessorGrid.config = '{"type":"RESET_COMPONENT"}'` clears state
 
 ## 📁 Related Files
 
@@ -214,6 +227,7 @@ updateGrid(
 
 ### Development
 - `V75-ENHANCEMENT-ROADMAP.md` - Future enhancement plans
+- `COMPONENT-RESET-API.md` - Reset functionality documentation and usage
 - `V74-WORKAROUND-TEST-GUIDE.md` - External state access testing
 - `V74-DETAILED-SETUP-GUIDE.md` - Detailed V74 setup procedures
 - `README.md` - Project overview and current status
@@ -227,8 +241,9 @@ When everything is working correctly:
 4. ✅ JavaScript queries update the grid content
 5. ✅ **External state access works** - `stableGrid1.currentResponses` accessible in JavaScript
 6. ✅ **Backend integration ready** - Perfect for JavaScript-based data processing
-7. ✅ No crashes or "dead computer icon" errors
-8. ✅ Grid is interactive (checkboxes clickable)
+7. ✅ **Component reset works** - Reset state even when component not visible
+8. ✅ No crashes or "dead computer icon" errors
+9. ✅ Grid is interactive (checkboxes clickable)
 
 **You now have full programmatic control AND external state access for your grid component!**
 
