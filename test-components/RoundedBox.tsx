@@ -1,4 +1,4 @@
-import { FC } from 'react'
+ximport { FC } from 'react'
 import { Retool } from '@tryretool/custom-component-support'
 
 export const RoundedBox: FC = () => {

@@ -1,8 +1,8 @@
 # Retool Grid Component - StableGrid Solution
 
-## 🎉 CURRENT STATUS: StableGrid V78 - Complete State Management Solution
+## 🎉 CURRENT STATUS: StableGrid V80 - Complete Grid Solution with Select/Dropdown Support
 
-**LATEST ENHANCEMENT**: The StableGrid component now includes **config-based reset functionality** that works even when the component is not visible, providing complete state management control.
+**LATEST ENHANCEMENT**: The StableGrid component now supports **select/dropdown grids** with proper empty value handling, in addition to checkbox, radio, and textbox grids. Complete state management with reset functionality included.
 
 ## ✅ What Works Now
 
@@ -30,8 +30,15 @@ npx retool-ccl deploy
 
 ### 3. Test Inspector Panel
 Enter this JSON in "Grid Config" field:
+
+**Checkbox Grid:**
 ```json
 {"type":"checkbox","rows":["Q1","Q2"],"columns":["A","B","C"]}
+```
+
+**Select/Dropdown Grid (V80+):**
+```json
+{"type":"select","rows":["Question 1","Question 2","Question 3"],"columns":["Column A","Column B","Column C"],"option_values":["Strongly Agree","Agree","Neutral","Disagree","Strongly Disagree"],"responses":{}}
 ```
 
 ### 4. Test Programmatic Control (V78)
@@ -92,8 +99,9 @@ const safeStringify = (value: any): string => {
 ### Grid Types Supported
 - **Checkbox Grid**: Multiple selections per row
 - **Radio Grid**: Single selection per row
+- **Select/Dropdown Grid**: Dropdown menus with configurable options (V80+)
 - **Textbox Grid**: Text input fields
-- **Mixed Types**: Planned for V75+ development
+- **Mixed Types**: Planned for future development
 
 ### Control Methods
 1. **Inspector Panel**: Direct JSON input

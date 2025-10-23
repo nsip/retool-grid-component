@@ -190,6 +190,110 @@ export const StableGrid: FC = () => {
     )
   }
 
+  // Select/Dropdown grid
+  if (config.type === 'select') {
+    const rows = config.rows || []
+    const columns = config.columns || []
+    const optionValues = config.option_values || []
+    
+    return (
+      <>
+        <style>{`
+          .stable-grid-select * {
+            font-size: 12px !important;
+            font-family: "Inter var", Inter, sans-serif !important;
+          }
+          .stable-grid-select table {
+            font-size: 12px !important;
+          }
+          .stable-grid-select th, .stable-grid-select td {
+            font-size: 12px !important;
+          }
+          .stable-grid-select select {
+            font-size: 12px !important;
+            font-family: "Inter var", Inter, sans-serif !important;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px;
+            width: 100%;
+            background-color: white;
+          }
+        `}</style>
+        <div className="stable-grid-select" style={{ fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
+          <table style={{ borderCollapse: 'collapse', border: '1px solid #ccc', width: '100%', fontSize: '12px' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f5f5f5' }}>
+                <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}></th>
+                {columns.map((col: string, idx: number) => (
+                  <th key={idx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center', fontWeight: 'bold', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
+                    {safeStringify(col)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row: string, rIdx: number) => (
+                <tr key={rIdx}>
+                  <td style={{ border: '1px solid #ccc', padding: '8px', fontWeight: 'bold', backgroundColor: '#f9f9f9', fontFamily: '"Inter var", Inter, sans-serif', fontSize: '12px' }}>
+                    {safeStringify(row)}
+                  </td>
+                  {columns.map((col: string, cIdx: number) => {
+                    const selectedValue = responses[row]?.[col] || ''
+                    return (
+                      <td key={cIdx} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center' }}>
+                        <select
+                          value={safeStringify(selectedValue)}
+                          onChange={(e) => {
+                            const newValue = e.target.value
+                            const newResponses = { ...responses }
+                            
+                            if (newValue === '') {
+                              // Remove empty value from responses
+                              if (newResponses[row]) {
+                                const { [col]: removed, ...remainingCols } = newResponses[row]
+                                if (Object.keys(remainingCols).length > 0) {
+                                  newResponses[row] = remainingCols
+                                } else {
+                                  // Remove row entirely if no columns remain
+                                  delete newResponses[row]
+                                }
+                              }
+                            } else {
+                              // Add/update value in responses
+                              newResponses[row] = { ...(newResponses[row] || {}), [col]: newValue }
+                            }
+                            
+                            updateResponses(newResponses)
+                          }}
+                          style={{ 
+                            fontSize: '12px',
+                            fontFamily: '"Inter var", Inter, sans-serif',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            padding: '6px',
+                            width: '100%',
+                            backgroundColor: 'white'
+                          }}
+                        >
+                          <option value="">-- Select --</option>
+                          {optionValues.map((optValue: string, optIdx: number) => (
+                            <option key={optIdx} value={safeStringify(optValue)}>
+                              {safeStringify(optValue)}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
   // Textbox grid (misc type)
   if (config.type === 'misc') {
     const rows = config.rows || []
