@@ -11,3 +11,5 @@ analyze.js
 retool-custom-component-manifest.json
 dist/*
 !dist/.placeholder
+# Retool API token: never commit (revoked 27 Nov 2026 after being committed in 448bb47)
+api_token*
