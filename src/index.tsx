@@ -21,6 +21,18 @@ export const StableGrid: FC = () => {
     initialValue: '{}'
   })
 
+  // PROVENANCE (27 Nov 2026, ST4S #N41): whose grid the current responses
+  // belong to: config.owner ("<assessment>|<control code>"), set by the app.
+  // The app's save refuses responses whose owner is another control, so a
+  // previous grid's answers can never be saved into the next grid.
+  const [responsesFor, setResponsesFor] = Retool.useStateString({
+    name: 'responsesFor',
+    label: 'Responses For',
+    description: 'Owner (assessment|control) of currentResponses, from config.owner',
+    inspector: 'hidden',
+    initialValue: ''
+  })
+
   // WORKAROUND: Event callback to notify external components when responses change
   const onResponsesChanged = Retool.useEventCallback({
     name: 'onResponsesChanged'
@@ -68,14 +80,31 @@ export const StableGrid: FC = () => {
       // Clear both internal and external state
       setConfigString('')
       setCurrentResponses('{}')
+      setResponsesFor('')
       
       // Fire event to notify external components
       onResponsesChanged()
     }
-  }, [config, setConfigString, setCurrentResponses, onResponsesChanged])
+  }, [config, setConfigString, setCurrentResponses, setResponsesFor, onResponsesChanged])
 
   // Extract responses from unified config (default to empty object)
   const responses = config?.responses || {}
+
+  // SYNC EXTERNAL STATE: Synchronize currentResponses with config.responses on config changes
+  React.useEffect(() => {
+    if (config && config.responses) {
+      const responsesString = JSON.stringify(config.responses)
+      if (responsesString !== currentResponses) {
+        console.log('Syncing currentResponses with config.responses:', config.responses)
+        setCurrentResponses(responsesString)
+        setResponsesFor(config.owner || '')
+        onResponsesChanged()
+      } else if (responsesFor !== (config.owner || '')) {
+        // same answers, new owner (e.g. two grids both empty): re-stamp only
+        setResponsesFor(config.owner || '')
+      }
+    }
+  }, [config, currentResponses, responsesFor, setCurrentResponses, setResponsesFor, onResponsesChanged])
 
   // Update responses within unified config structure - DUAL STATE PATTERN with workaround
   const updateResponses = (newResponses: any) => {
@@ -96,6 +125,7 @@ export const StableGrid: FC = () => {
     
     // WORKAROUND: Update external accessible state for external components
     setCurrentResponses(JSON.stringify(newResponses))
+    setResponsesFor(config.owner || '')
     
     // WORKAROUND: Fire event to notify external components of changes
     onResponsesChanged()
